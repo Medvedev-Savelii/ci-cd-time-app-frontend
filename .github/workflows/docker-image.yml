@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Log into registry
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: cr.yandex
+          username: json_key
+          password: ${{ secrets.YCR_TOKEN }}
+    
+    - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag cr.yandex/crp4j94ui2o0mg26i9v8/backend-time:latest
+
+    - name: Push image to Registry
+        run: docker push cr.yandex/crp4j94ui2o0mg26i9v8/backend-time:latest
